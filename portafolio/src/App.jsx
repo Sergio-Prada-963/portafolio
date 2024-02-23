@@ -327,7 +327,7 @@ function App() {
 
     // Configs
 
-    let BACKGROUND_COLOR = body.dataset.mode === "dark" ? "rgba(30, 41, 59)" : "rgb(214, 214, 214)"
+    let BACKGROUND_COLOR = prefersDark.matches ? "rgba(30, 41, 59)" : "rgb(214, 214, 214)"
     let PARTICLE_RADIUS = 1
     let G_POINT_RADIUS = 10
     let G_POINT_RADIUS_LIMITS = 65
@@ -564,8 +564,6 @@ function App() {
     body.classList.add(prefersDark.matches ? "body-dark" : "body-light")
 
     function toggleDarkMode() {
-      console.log("si funca");
-      // body.dataset.mode = prefersDark.matches ? "dark" : "light"
       if (body.dataset.mode === "light") {
         body.classList.add("body-dark")
         body.classList.remove("body-light")
