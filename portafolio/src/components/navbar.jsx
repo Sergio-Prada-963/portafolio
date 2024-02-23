@@ -1,16 +1,12 @@
-import React, { useEffect } from "react";
-
-
+import React, { useEffect } from "react"
 
 export const Navbar = () => {
-  useEffect(() => {
-    
-  }, []);
-
   return (
-    <div className='text-black dark:text-white'>
-      Aquí va el nav-bar
-      <button id='toggle-dark-mode'>Cambiar Modo</button>
-    </div>
-  );
-};
+    <>
+      <div className='text-black dark:text-white'>
+        Aquí va el nav-bar
+        <button id='toggle-dark-mode' className="bg-btn_toggle dark:bg-btn_toggle_dark">Cambiar Modo</button>
+      </div>
+    </>
+  )
+}
