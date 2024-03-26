@@ -1,0 +1,78 @@
+//tailwind
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+// fonts
+@font-face {
+  font-family: "Montserrat";
+  src:
+    url("../assets/fonts/Montserrat-VariableFont_wght.woff2") format("woff2"),
+    url("../assets/fonts/Montserrat-Italic-VariableFont_wght.woff2") format("woff2"),
+    url("../assets/fonts/static/Montserrat-Black.woff2") format("woff2"),
+    url("../assets/fonts/static/Montserrat-BlackItalic.woff2") format("woff2"),
+    url("../assets/fonts/static/Montserrat-Bold.woff2") format("woff2"),
+    url("../assets/fonts/static/Montserrat-BoldItalic.woff2") format("woff2"),
+    url("../assets/fonts/static/Montserrat-ExtraBoldItalic.woff2") format("woff2"),
+    url("../assets/fonts/static/Montserrat-ExtraLight.woff2") format("woff2"),
+    url("../assets/fonts/static/Montserrat-ExtraLightItalic.woff2") format("woff2"),
+    url("../assets/fonts/static/Montserrat-Italic.woff2") format("woff2"),
+    url("../assets/fonts/static/Montserrat-Light.woff2") format("woff2"),
+    url("../assets/fonts/static/Montserrat-LightItalic.woff2") format("woff2"),
+    url("../assets/fonts/static/Montserrat-Medium.woff2") format("woff2"),
+    url("../assets/fonts/static/Montserrat-MediumItalic.woff2") format("woff2"),
+    url("../assets/fonts/static/Montserrat-Regular.woff2") format("woff2"),
+    url("../assets/fonts/static/Montserrat-SemiBold.woff2") format("woff2"),
+    url("../assets/fonts/static/Montserrat-SemiBoldItalic.woff2") format("woff2"),
+    url("../assets/fonts/static/Montserrat-Thin.woff2") format("woff2"),
+    url("../assets/fonts/static/Montserrat-ThinItalic.woff2") format("woff2");
+}
+
+// botones
+@import "./buttons/buttons.scss";
+@import "./nav.scss";
+
+:root {
+  line-height: 1.5;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    background-color: #ffffff;
+  }
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    background-color: #000000;
+  }
+}
+
+body {
+  margin: 0;
+  width: 100%;
+  min-height: 100vh;
+  font-family: "Montserrat", sans-serif;
+  padding: 0 15px;
+}
+
+.body-dark {
+  background-color: #000000;
+}
+
+.body-light {
+  background-color: #ffffff;
+}
+
+header {
+  padding-top: 15px;
+}

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react"
-import "./index.scss"
+import "./scss/index.scss"
 import { Welcome } from "./components/welcome"
 import { Navbar } from "./components/navbar"
 
@@ -590,7 +590,7 @@ function App() {
       <Welcome />
       <Navbar />
       <div className=' dark:bg-rojo'>
-        <h1 className="text-center">En mantenimiento</h1>
+        <h1 className='text-center'>En mantenimiento</h1>
       </div>
       <div>
         el footer ?
@@ -649,4 +649,4 @@ function App() {
   )
 }
 
-export default App
+// export default App

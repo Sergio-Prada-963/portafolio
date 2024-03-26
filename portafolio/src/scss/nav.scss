@@ -1,0 +1,36 @@
+.nav_principal {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: space-between;
+  padding: 10px;
+
+  .cont_logo {
+    border: 1px solid;
+    padding: 6px;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    img {
+        width: 18px;
+        padding: 2px;
+        user-select: none;
+        -webkit-user-drag: none;
+    }
+  }
+  .name_ {
+    font-size: 0.8rem;
+    font-weight: 500;
+    p {
+        margin-top: -3px;
+    }
+  }
+
+  //icon menu
+  .menu_icon{
+    width: 32px;
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+  }
+}
