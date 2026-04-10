@@ -81,7 +81,7 @@ function App() {
 								Soy <strong>Sergio Alejandro Rodríguez Prada</strong>, desarrollador Full Stack apasionado por la arquitectura de software y la evolución tecnológica.
 							</p>
 							<p>
-								Me especializo en construir soluciones integrales de extremo a extremo, desde interfaces con <strong>React</strong> y <strong>Flutter</strong> hasta backends robustos con <strong>Node.js</strong> y <strong>Express</strong>, bases de datos y modelos de IA integrados con <strong>LangChain & LLMs</strong>.
+								Me especializo en construir soluciones integrales de extremo a extremo, desde interfaces con <strong>React</strong> y <strong>Flutter</strong> hasta backends robustos con <strong>Python</strong>, <strong>Node.js</strong> y <strong>Express</strong>, bases de datos y modelos de IA integrados con <strong>LangChain & LLMs</strong>.
 							</p>
 							<p>
 								Trabajo con una mentalidad de <strong>mejora constante</strong>, siempre buscando los mejores patrones de diseño y las tecnologías más relevantes para cada proyecto.
