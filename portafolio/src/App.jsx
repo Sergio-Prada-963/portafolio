@@ -1,4 +1,6 @@
 import Interactive from "./components/Interactive";
+import userLogo from "./assets/user_logo_black.png";
+import userLogo_white from "./assets/user_logo_v2.png";
 
 function App() {
 	return (
@@ -43,14 +45,14 @@ function App() {
 
 				<div class="hero-content">
 					<div class="hero-avatar-wrap">
-						<div class="hero-avatar-placeholder">S</div>
+						<img src={userLogo} alt="user logo" className="hero-avatar-placeholder" />
 					</div>
 					<p class="hero-tag">// Full Stack Developer & AI Engineer</p>
 					<h1 class="hero-name">
 						<span class="name-gold">Sergio</span> Rodriguez
 					</h1>
 					<p class="hero-sub">
-						Medellín, Colombia &nbsp;·&nbsp; <span>Software Architecture</span> &nbsp;·&nbsp; AI Solutions
+						Barranquilla, Colombia &nbsp;·&nbsp; <span>Software Architecture</span> &nbsp;·&nbsp; AI Solutions
 					</p>
 					<a href="#contacto" class="btn-contact">
 						<i class="fa-regular fa-paper-plane"></i>
@@ -66,7 +68,8 @@ function App() {
 				<div class="container">
 					<div class="about-grid reveal">
 						<div class="about-img-wrap">
-							<div class="about-img-frame">S</div>
+							{/* <div class="about-img-frame">S</div> */}
+							<img src={userLogo_white} alt="user logo" class="about-img-frame" />
 						</div>
 						<div class="about-text">
 							<span class="section-label">// 01 — Sobre mí</span>
@@ -351,16 +354,16 @@ function App() {
 						<div class="contact-info">
 							<p>¿Tienes un proyecto en mente o quieres colaborar? Estoy disponible para nuevas oportunidades. ¡Hablemos!</p>
 							<div class="contact-links">
-								<a href="mailto:sergio@email.com" class="contact-link">
+								<a href="mailto:alejanprada140705@gmail.com" class="contact-link">
 									<div class="contact-link-icon">
 										<i class="fa-solid fa-envelope"></i>
 									</div>
 									<div class="contact-link-text">
 										<strong>Email</strong>
-										<span>sergio@email.com</span>
+										<span>alejanprada140705@gmail.com</span>
 									</div>
 								</a>
-								<a href="https://linkedin.com" target="_blank" class="contact-link">
+								<a href="https://www.linkedin.com/in/dev-sergio-prada" target="_blank" class="contact-link">
 									<div class="contact-link-icon">
 										<i class="fa-brands fa-linkedin"></i>
 									</div>
@@ -369,13 +372,13 @@ function App() {
 										<span>Sergio Rodriguez Prada</span>
 									</div>
 								</a>
-								<a href="https://github.com" target="_blank" class="contact-link">
+								<a href="https://github.com/Sergio-Prada-963" target="_blank" class="contact-link">
 									<div class="contact-link-icon">
 										<i class="fa-brands fa-github"></i>
 									</div>
 									<div class="contact-link-text">
 										<strong>GitHub</strong>
-										<span>@sergiorodriguez</span>
+										<span>Sergio-Prada-963</span>
 									</div>
 								</a>
 								<a href="#" class="contact-link">
@@ -384,7 +387,7 @@ function App() {
 									</div>
 									<div class="contact-link-text">
 										<strong>Ubicación</strong>
-										<span>Medellín, Colombia 🇨🇴</span>
+										<span>Barranquilla, Colombia 🇨🇴</span>
 									</div>
 								</a>
 							</div>
@@ -419,15 +422,15 @@ function App() {
 						<strong>Sergio Rodriguez</strong> · Full Stack Developer
 					</span>
 				</div>
-				<div class="footer-copy">© 2025 · Hecho con ❤️ en Medellín</div>
+				<div class="footer-copy">© 2025 · Hecho con ❤️ en Barranquilla</div>
 				<div class="footer-socials">
-					<a href="https://github.com" target="_blank" class="footer-social">
+					<a href="https://github.com/Sergio-Prada-963" target="_blank" class="footer-social">
 						<i class="fa-brands fa-github"></i>
 					</a>
-					<a href="https://linkedin.com" target="_blank" class="footer-social">
+					<a href="https://www.linkedin.com/in/dev-sergio-prada" target="_blank" class="footer-social">
 						<i class="fa-brands fa-linkedin"></i>
 					</a>
-					<a href="mailto:sergio@email.com" class="footer-social">
+					<a href="mailto:alejanprada140705@gmail.com" class="footer-social">
 						<i class="fa-solid fa-envelope"></i>
 					</a>
 				</div>
