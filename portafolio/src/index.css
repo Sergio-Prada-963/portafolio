@@ -211,9 +211,9 @@ nav {
 	}
 }
 
-.hero-content {
+.hero-avatar-wrap,.hero-tag, .hero-name, .name-gold, .hero-sub, .btn-contact, #about, #misionvision, #proyectos, #habilidades, #softskills, #juego, #contacto, footer {
 	position: relative;
-	z-index: 1;
+	z-index: 2;
 }
 
 .hero-avatar-wrap {
@@ -1111,6 +1111,19 @@ footer {
 	}
 	.nav-links {
 		display: none;
+	}
+}
+
+/* Ocultar sección de juego y menú en pantallas pequeñas <= 850px */
+@media (max-width: 850px) {
+	/* ocultar toda la sección de captura de bugs */
+	#juego {
+		display: none !important;
+	}
+
+	/* ocultar el menú de enlaces de navegación */
+	nav .nav-links {
+		display: none !important;
 	}
 }
 @media (max-width: 600px) {

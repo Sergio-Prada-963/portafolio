@@ -5,6 +5,7 @@ import userLogo_white from "./assets/user_logo_v2.png";
 function App() {
 	return (
 		<>
+			<canvas id="c" style={{position: 'fixed', top: 0, left: 0, zIndex: 1}}></canvas>
 			<div class="cursor-dot" id="cursorDot"></div>
 			<div class="cursor-ring" id="cursorRing"></div>
 
@@ -37,11 +38,12 @@ function App() {
 
 			{/*  HERO*/}
 			<section id="hero">
-				<div class="hero-bg"></div>
+				{/* <div class="hero-bg"></div>
 				<div class="hero-grid"></div>
 				<div class="orb orb-1"></div>
 				<div class="orb orb-2"></div>
-				<div class="orb orb-3"></div>
+				<div class="orb orb-3"></div> */}
+				{/* <canvas id='c'></canvas> */}
 
 				<div class="hero-content">
 					<div class="hero-avatar-wrap">
@@ -52,7 +54,7 @@ function App() {
 						<span class="name-gold">Sergio</span> Rodriguez
 					</h1>
 					<p class="hero-sub">
-						Barranquilla, Colombia &nbsp;·&nbsp; <span>Software Architecture</span> &nbsp;·&nbsp; AI Solutions
+						Desarrollador &nbsp;·&nbsp; <span>Software Architecture</span> &nbsp;·&nbsp; AI Solutions
 					</p>
 					<a href="#contacto" class="btn-contact">
 						<i class="fa-regular fa-paper-plane"></i>
@@ -145,18 +147,36 @@ function App() {
 						Mis <em>Proyectos</em>
 					</h2>
 					<div class="projects-grid reveal">
-						{/*  Card 1*/}
+						{/*  Card 0*/}
 						<div class="project-card">
-							<div class="project-thumb">🤖</div>
+							<div class="project-thumb">🧠</div>
 							<div class="project-body">
 								<div class="project-tags">
 									<span class="tag">LangChain</span>
 									<span class="tag">Python</span>
 									<span class="tag">LLMs</span>
+									<span class="tag">Vue</span>
+									<span class="tag">Odoo</span>
 								</div>
 								<h3>AI Assistant Platform</h3>
-								<p>Plataforma de asistentes inteligentes con integración LangChain, memoria contextual y múltiples modelos de lenguaje.</p>
-								<a href="#" class="project-link">
+								<p>Plataforma de asistentes inteligentes con integración LangChain, memoria contextual conectada por api a odoo.</p>
+								<a href="https://github.com/Sergio-Prada-963/myrx_ai" target="blank" class="project-link">
+									<i class="fa-solid fa-arrow-right"></i> Ver proyecto
+								</a>
+							</div>
+						</div>
+						{/*  Card 1*/}
+						<div class="project-card">
+							<div class="project-thumb">🤖</div>
+							<div class="project-body">
+								<div class="project-tags">
+									<span class="tag">Flask</span>
+									<span class="tag">Python</span>
+									<span class="tag">Flask</span>
+								</div>
+								<h3>Web para agendar citas</h3>
+								<p>Plataforma para agendar citas medicas.</p>
+								<a href="https://github.com/Sergio-Prada-963/EPS-citas" target="blank" class="project-link">
 									<i class="fa-solid fa-arrow-right"></i> Ver proyecto
 								</a>
 							</div>
@@ -166,13 +186,13 @@ function App() {
 							<div class="project-thumb">🛍️</div>
 							<div class="project-body">
 								<div class="project-tags">
-									<span class="tag">Odoo</span>
 									<span class="tag">Python</span>
-									<span class="tag">PostgreSQL</span>
+									<span class="tag">Turso DB</span>
+									<span class="tag">Flask</span>
 								</div>
-								<h3>ERP Empresarial Odoo</h3>
+								<h3>Web para teatros</h3>
 								<p>Implementación y personalización de módulos Odoo para gestión empresarial, ventas e inventario.</p>
-								<a href="#" class="project-link">
+								<a href="https://github.com/Sergio-Prada-963/Cine-y-teatro-NOIR" target="blank" class="project-link">
 									<i class="fa-solid fa-arrow-right"></i> Ver proyecto
 								</a>
 							</div>
@@ -182,13 +202,12 @@ function App() {
 							<div class="project-thumb">📱</div>
 							<div class="project-body">
 								<div class="project-tags">
-									<span class="tag">Flutter</span>
 									<span class="tag">Node.js</span>
-									<span class="tag">MongoDB</span>
+									<span class="tag">Sql</span>
 								</div>
-								<h3>App Mobile Full Stack</h3>
-								<p>Aplicación móvil multiplataforma con backend en Express, base de datos NoSQL y autenticación JWT.</p>
-								<a href="#" class="project-link">
+								<h3>Web parqueadero</h3>
+								<p>Aplicación web con backend en Express, base de datos SQL y autenticación JWT.</p>
+								<a href="https://github.com/Sergio-Prada-963/parqueadero" target="blank" class="project-link">
 									<i class="fa-solid fa-arrow-right"></i> Ver proyecto
 								</a>
 							</div>
@@ -198,13 +217,12 @@ function App() {
 							<div class="project-thumb">⚡</div>
 							<div class="project-body">
 								<div class="project-tags">
-									<span class="tag">React</span>
-									<span class="tag">Vite</span>
-									<span class="tag">Tailwind</span>
+									<span class="tag">Node Js</span>
+									<span class="tag">Turso Db</span>
 								</div>
 								<h3>Dashboard Analytics</h3>
 								<p>Panel de análisis en tiempo real con visualizaciones dinámicas y arquitectura de componentes avanzada.</p>
-								<a href="#" class="project-link">
+								<a href="https://github.com/Sergio-Prada-963/constructora_malambo" target="blank" class="project-link">
 									<i class="fa-solid fa-arrow-right"></i> Ver proyecto
 								</a>
 							</div>
@@ -219,8 +237,8 @@ function App() {
 									<span class="tag">PostgreSQL</span>
 								</div>
 								<h3>REST API Escalable</h3>
-								<p>API RESTful de alto rendimiento con autenticación OAuth2, rate limiting, caching y documentación Swagger.</p>
-								<a href="#" class="project-link">
+								<p>API RESTful con Node js y React, caching y documentación Swagger.</p>
+								<a href="https://github.com/Sergio-Prada-963/premionovel" target="blank" class="project-link">
 									<i class="fa-solid fa-arrow-right"></i> Ver proyecto
 								</a>
 							</div>
@@ -234,9 +252,9 @@ function App() {
 									<span class="tag">Bootstrap</span>
 									<span class="tag">JS</span>
 								</div>
-								<h3>Landing Page Premium</h3>
-								<p>Sitio web corporativo con diseño premium, animaciones CSS avanzadas y optimización SEO.</p>
-								<a href="#" class="project-link">
+								<h3>Web animada.</h3>
+								<p>Sitio web animado para tu ser querido.</p>
+								<a href="https://github.com/Sergio-Prada-963/do_you_love_me_code" target="blank" class="project-link">
 									<i class="fa-solid fa-arrow-right"></i> Ver proyecto
 								</a>
 							</div>
@@ -381,13 +399,13 @@ function App() {
 										<span>Sergio-Prada-963</span>
 									</div>
 								</a>
-								<a href="#" class="contact-link">
+								<a href="https://canva.link/gvmz58ho64ly4k4" target="_blank" rel="noopener noreferrer" class="contact-link">
 									<div class="contact-link-icon">
-										<i class="fa-solid fa-map-pin"></i>
+										<i class="fa-solid fa-file-lines"></i>
 									</div>
 									<div class="contact-link-text">
-										<strong>Ubicación</strong>
-										<span>Barranquilla, Colombia 🇨🇴</span>
+										<strong>Mi CV</strong>
+										<span>Ver CV</span>
 									</div>
 								</a>
 							</div>
@@ -395,15 +413,15 @@ function App() {
 						<form id="contactForm" class="contact-form">
 							<div class="form-group">
 								<label>Nombre</label>
-								<input type="text" placeholder="Tu nombre completo" required />
+								<input name="name" type="text" placeholder="Tu nombre completo" required />
 							</div>
 							<div class="form-group">
 								<label>Email</label>
-								<input type="email" placeholder="tu@email.com" required />
+								<input name="email" type="email" placeholder="tu@email.com" required />
 							</div>
 							<div class="form-group">
 								<label>Mensaje</label>
-								<textarea placeholder="Cuéntame sobre tu proyecto..." required></textarea>
+								<textarea name="message" placeholder="Cuéntame sobre tu proyecto..." required></textarea>
 							</div>
 							<button type="submit" class="btn-send">
 								<i class="fa-regular fa-paper-plane"></i> Enviar mensaje

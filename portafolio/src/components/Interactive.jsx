@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import emailjs from "@emailjs/browser";
 
 export default function Interactive() {
 	useEffect(() => {
@@ -86,8 +87,8 @@ export default function Interactive() {
 			{ name: "Tailwind", img: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg", lvl: 82 },
 			{ name: "Express", img: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/express/express-original.svg", lvl: 83 },
 			{ name: "Vite", img: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vitejs/vitejs-original.svg", lvl: 80 },
-			{ name: "Odoo", img: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg", lvl: 70 },
-			{ name: "LangChain", img: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg", lvl: 75 },
+			{ name: "Odoo", img: "https://odoocdn.com/web/image/website/1/favicon?unique=8d8a558", lvl: 70 },
+			{ name: "LangChain", img: "https://cdn.prod.website-files.com/65b8cd72835ceeacd4449a53/69a17e4a429d54e956e2a763_favicon.png", lvl: 75 },
 		];
 
 		const grid = document.getElementById("techGrid");
@@ -295,18 +296,599 @@ export default function Interactive() {
 
 		resetGame();
 
+		// Initialize EmailJS public key once if provided in env
+		const _emailjsPublicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+		if (_emailjsPublicKey) {
+			try {
+				emailjs.init(_emailjsPublicKey);
+				console.log("EmailJS initialized");
+			} catch (e) {
+				console.warn("EmailJS init failed", e);
+			}
+		}
+
+		/* Background particle canvas (id="c") - adapted version */
+		(function () {
+			window.requestAnimationFrame = (function () {
+				return (
+					window.requestAnimationFrame ||
+					window.webkitRequestAnimationFrame ||
+					window.mozRequestAnimationFrame ||
+					window.oRequestAnimationFrame ||
+					window.msRequestAnimationFrame ||
+					function (callback) {
+						window.setTimeout(callback, 1000 / 60);
+					}
+				);
+			})();
+
+			function Vector(x, y) {
+				this.x = x || 0;
+				this.y = y || 0;
+			}
+
+			Vector.add = function (a, b) {
+				return new Vector(a.x + b.x, a.y + b.y);
+			};
+
+			Vector.sub = function (a, b) {
+				return new Vector(a.x - b.x, a.y - b.y);
+			};
+
+			Vector.scale = function (v, s) {
+				return v.clone().scale(s);
+			};
+
+			Vector.random = function () {
+				return new Vector(Math.random() * 2 - 1, Math.random() * 2 - 1);
+			};
+
+			Vector.prototype = {
+				set: function (x, y) {
+					if (typeof x === "object") {
+						y = x.y;
+						x = x.x;
+					}
+					this.x = x || 0;
+					this.y = y || 0;
+					return this;
+				},
+
+				add: function (v) {
+					this.x += v.x;
+					this.y += v.y;
+					return this;
+				},
+
+				sub: function (v) {
+					this.x -= v.x;
+					this.y -= v.y;
+					return this;
+				},
+
+				scale: function (s) {
+					this.x *= s;
+					this.y *= s;
+					return this;
+				},
+
+				length: function () {
+					return Math.sqrt(this.x * this.x + this.y * this.y);
+				},
+
+				lengthSq: function () {
+					return this.x * this.x + this.y * this.y;
+				},
+
+				normalize: function () {
+					var m = Math.sqrt(this.x * this.x + this.y * this.y);
+					if (m) {
+						this.x /= m;
+						this.y /= m;
+					}
+					return this;
+				},
+
+				angle: function () {
+					return Math.atan2(this.y, this.x);
+				},
+
+				angleTo: function (v) {
+					var dx = v.x - this.x,
+						dy = v.y - this.y;
+					return Math.atan2(dy, dx);
+				},
+
+				distanceTo: function (v) {
+					var dx = v.x - this.x,
+						dy = v.y - this.y;
+					return Math.sqrt(dx * dx + dy * dy);
+				},
+
+				distanceToSq: function (v) {
+					var dx = v.x - this.x,
+						dy = v.y - this.y;
+					return dx * dx + dy * dy;
+				},
+
+				lerp: function (v, t) {
+					this.x += (v.x - this.x) * t;
+					this.y += (v.y - this.y) * t;
+					return this;
+				},
+
+				clone: function () {
+					return new Vector(this.x, this.y);
+				},
+
+				toString: function () {
+					return "(x:" + this.x + ", y:" + this.y + ")";
+				},
+			};
+
+			function GravityPoint(x, y, radius, targets) {
+				Vector.call(this, x, y);
+				this.radius = radius;
+				this.currentRadius = radius * 0.5;
+
+				this._targets = {
+					particles: targets.particles || [],
+					gravities: targets.gravities || [],
+				};
+
+				this._speed = new Vector();
+			}
+
+			GravityPoint.RADIUS_LIMIT = 65;
+			GravityPoint.interferenceToPoint = true;
+
+			GravityPoint.prototype = (function (o) {
+				var s = new Vector(0, 0),
+					p;
+				for (p in o) s[p] = o[p];
+				return s;
+			})({
+				gravity: 0.05,
+				isMouseOver: false,
+				dragging: false,
+				destroyed: false,
+				_easeRadius: 0,
+				_dragDistance: null,
+				_collapsing: false,
+
+				hitTest: function (p) {
+					return this.distanceTo(p) < this.radius;
+				},
+
+				startDrag: function (dragStartPoint) {
+					this._dragDistance = Vector.sub(dragStartPoint, this);
+					this.dragging = true;
+				},
+
+				drag: function (dragToPoint) {
+					this.x = dragToPoint.x - this._dragDistance.x;
+					this.y = dragToPoint.y - this._dragDistance.y;
+				},
+
+				endDrag: function () {
+					this._dragDistance = null;
+					this.dragging = false;
+				},
+
+				addSpeed: function (d) {
+					this._speed = this._speed.add(d);
+				},
+
+				collapse: function (e) {
+					this.currentRadius *= 1.75;
+					this._collapsing = true;
+				},
+
+				render: function (ctx) {
+					if (this.destroyed) return;
+
+					var particles = this._targets.particles,
+						i,
+						len;
+
+					for (i = 0, len = particles.length; i < len; i++) {
+						particles[i].addSpeed(Vector.sub(this, particles[i]).normalize().scale(this.gravity));
+					}
+
+					this._easeRadius = (this._easeRadius + (this.radius - this.currentRadius) * 0.07) * 0.95;
+					this.currentRadius += this._easeRadius;
+					if (this.currentRadius < 0) this.currentRadius = 0;
+
+					if (this._collapsing) {
+						this.radius *= 0.75;
+						if (this.currentRadius < 1) this.destroyed = true;
+						this._draw(ctx);
+						return;
+					}
+
+					var gravities = this._targets.gravities,
+						g,
+						absorp,
+						area = this.radius * this.radius * Math.PI,
+						garea;
+
+					for (i = 0, len = gravities.length; i < len; i++) {
+						g = gravities[i];
+
+						if (g === this || g.destroyed) continue;
+
+						if (
+							(this.currentRadius >= g.radius || this.dragging) &&
+							this.distanceTo(g) < (this.currentRadius + g.radius) * 0.85
+						) {
+							g.destroyed = true;
+							this.gravity += g.gravity;
+
+							absorp = Vector.sub(g, this).scale((g.radius / this.radius) * 0.5);
+							this.addSpeed(absorp);
+
+							garea = g.radius * g.radius * Math.PI;
+							this.currentRadius = Math.sqrt((area + garea * 3) / Math.PI);
+							this.radius = Math.sqrt((area + garea) / Math.PI);
+						}
+
+						g.addSpeed(Vector.sub(this, g).normalize().scale(this.gravity));
+					}
+
+					if (GravityPoint.interferenceToPoint && !this.dragging) this.add(this._speed);
+
+					this._speed = new Vector();
+
+					if (this.currentRadius > GravityPoint.RADIUS_LIMIT) this.collapse();
+
+					this._draw(ctx);
+				},
+
+				_draw: function (ctx) {
+					var grd, r;
+
+					ctx.save();
+
+					grd = ctx.createRadialGradient(this.x, this.y, this.radius, this.x, this.y, this.radius * 5);
+					grd.addColorStop(0, "rgba(0, 0, 0, 0.1)");
+					grd.addColorStop(1, "rgba(0, 0, 0, 0)");
+					ctx.beginPath();
+					ctx.arc(this.x, this.y, this.radius * 5, 0, Math.PI * 2, false);
+					ctx.fillStyle = grd;
+					ctx.fill();
+
+					r = Math.random() * this.currentRadius * 0.7 + this.currentRadius * 0.3;
+					grd = ctx.createRadialGradient(this.x, this.y, r, this.x, this.y, this.currentRadius);
+					grd.addColorStop(0, "rgba(0, 0, 0, 1)");
+					grd.addColorStop(1, Math.random() < 0.2 ? "rgba(255, 196, 0, 0.15)" : "rgba(103, 181, 191, 0.75)");
+					ctx.beginPath();
+					ctx.arc(this.x, this.y, this.currentRadius, 0, Math.PI * 2, false);
+					ctx.fillStyle = grd;
+					ctx.fill();
+					ctx.restore();
+				},
+			});
+
+			function Particle(x, y, radius) {
+				Vector.call(this, x, y);
+				this.radius = radius;
+
+				this._latest = new Vector();
+				this._speed = new Vector();
+			}
+
+			Particle.prototype = (function (o) {
+				var s = new Vector(0, 0),
+					p;
+				for (p in o) s[p] = o[p];
+				return s;
+			})({
+				addSpeed: function (d) {
+					this._speed.add(d);
+				},
+
+				update: function () {
+					if (this._speed.length() > 12) this._speed.normalize().scale(12);
+
+					this._latest.set(this);
+					this.add(this._speed);
+				},
+			});
+
+			const prefersDarkBg = window.matchMedia("(prefers-color-scheme: dark)");
+			const bodyBg = document.body;
+
+			let BACKGROUND_COLOR = prefersDarkBg.matches ? "rgba(30, 41, 59)" : "rgb(214, 214, 214)";
+			let PARTICLE_RADIUS = 1;
+			let G_POINT_RADIUS = 10;
+			let G_POINT_RADIUS_LIMITS = 65;
+
+			var bgCanvas,
+				bgContext,
+				bgBufferCvs,
+				bgBufferCtx,
+				bgScreenWidth,
+				bgScreenHeight,
+				bgMouse = new Vector(),
+				bgGravities = [],
+				bgParticles = [],
+				bgGrad,
+				bgAnimId;
+
+			const div = document.createElement("div");
+			div.style.width = "100px";
+			div.style.height = "100px";
+			div.style.overflow = "scroll";
+			div.style.position = "absolute";
+			div.style.top = "-9999px";
+			div.style.left = "-9999px";
+			document.body.appendChild(div);
+			const scrollWidth = div.offsetWidth - div.clientWidth;
+			document.body.removeChild(div);
+
+			function resizeBg() {
+				bgScreenWidth = (bgCanvas.width = window.innerWidth - scrollWidth);
+				bgScreenHeight = (bgCanvas.height = window.innerHeight);
+				bgBufferCvs.width = bgScreenWidth;
+				bgBufferCvs.height = bgScreenHeight;
+				bgContext = bgCanvas.getContext("2d");
+				bgBufferCtx = bgBufferCvs.getContext("2d");
+				var cx = bgCanvas.width * 0.5,
+					cy = bgCanvas.height * 0.5;
+
+				bgGrad = bgContext.createRadialGradient(cx, cy, 0, cx, cy, Math.sqrt(cx * cx + cy * cy));
+				bgGrad.addColorStop(0, "rgba(0, 0, 0, 0)");
+				bgGrad.addColorStop(1, "rgba(0, 0, 0, 0.35)");
+			}
+
+			function mouseMoveBg(e) {
+				bgMouse.set(e.clientX, e.clientY);
+
+				var i,
+					g,
+					hit = false;
+				for (i = bgGravities.length - 1; i >= 0; i--) {
+					g = bgGravities[i];
+					if ((!hit && g.hitTest(bgMouse)) || g.dragging) g.isMouseOver = hit = true;
+					else g.isMouseOver = false;
+				}
+
+				bgCanvas.style.cursor = hit ? "pointer" : "default";
+			}
+
+			function mouseDownBg(e) {
+				for (var i = bgGravities.length - 1; i >= 0; i--) {
+					if (bgGravities[i].isMouseOver) {
+						bgGravities[i].startDrag(bgMouse);
+						return;
+					}
+				}
+				bgGravities.push(
+					new GravityPoint(e.clientX, e.clientY, G_POINT_RADIUS, {
+						particles: bgParticles,
+						gravities: bgGravities,
+					})
+				);
+			}
+
+			function mouseUpBg() {
+				for (var i = 0, len = bgGravities.length; i < len; i++) {
+					if (bgGravities[i].dragging) {
+						bgGravities[i].endDrag();
+						break;
+					}
+				}
+			}
+
+			function doubleClickBg() {
+				for (var i = bgGravities.length - 1; i >= 0; i--) {
+					if (bgGravities[i].isMouseOver) {
+						bgGravities[i].collapse();
+						break;
+					}
+				}
+			}
+
+			function addParticleBg(num) {
+				var i, p;
+				for (i = 0; i < num; i++) {
+					p = new Particle(
+						Math.floor(Math.random() * bgScreenWidth - PARTICLE_RADIUS * 2) + 1 + PARTICLE_RADIUS,
+						Math.floor(Math.random() * bgScreenHeight - PARTICLE_RADIUS * 2) + 1 + PARTICLE_RADIUS,
+						PARTICLE_RADIUS
+					);
+
+					p.addSpeed(Vector.random());
+					bgParticles.push(p);
+				}
+			}
+
+			var controlBg = { particleNum: 120 };
+
+			bgCanvas = document.getElementById("c");
+			bgBufferCvs = document.createElement("canvas");
+
+			window.addEventListener("resize", resizeBg, false);
+			resizeBg(null);
+
+			addParticleBg(controlBg.particleNum);
+
+			bgCanvas.addEventListener("mousemove", mouseMoveBg, false);
+			bgCanvas.addEventListener("mousedown", mouseDownBg, false);
+			bgCanvas.addEventListener("mouseup", mouseUpBg, false);
+			bgCanvas.addEventListener("dblclick", doubleClickBg, false);
+
+			function loopBg() {
+				var i, len, g, p;
+
+				bgContext.save();
+				bgContext.fillStyle = BACKGROUND_COLOR;
+				bgContext.fillRect(0, 0, bgScreenWidth, bgScreenHeight);
+				bgContext.restore();
+
+				for (i = 0, len = bgGravities.length; i < len; i++) {
+					g = bgGravities[i];
+					if (g.dragging) g.drag(bgMouse);
+					g.render(bgContext);
+					if (g.destroyed) {
+						bgGravities.splice(i, 1);
+						len--;
+						i--;
+					}
+				}
+
+				bgBufferCtx.save();
+				bgBufferCtx.globalCompositeOperation = "destination-out";
+				bgBufferCtx.globalAlpha = 0.35;
+				bgBufferCtx.fillRect(0, 0, bgScreenWidth, bgScreenHeight);
+				bgBufferCtx.restore();
+
+				len = bgParticles.length;
+				bgBufferCtx.save();
+				bgBufferCtx.fillStyle = bgBufferCtx.strokeStyle = bodyBg.dataset.mode === "dark" ? "#fff" : "#333";
+				bgBufferCtx.lineCap = bgBufferCtx.lineJoin = "round";
+				bgBufferCtx.lineWidth = PARTICLE_RADIUS * 2;
+				bgBufferCtx.beginPath();
+				for (i = 0; i < len; i++) {
+					p = bgParticles[i];
+					p.update();
+					bgBufferCtx.moveTo(p.x, p.y);
+					bgBufferCtx.lineTo(p._latest.x, p._latest.y);
+				}
+				bgBufferCtx.stroke();
+				bgBufferCtx.beginPath();
+				for (i = 0; i < len; i++) {
+					p = bgParticles[i];
+					bgBufferCtx.moveTo(p.x, p.y);
+					bgBufferCtx.arc(p.x, p.y, p.radius, 0, Math.PI * 2, false);
+				}
+				bgBufferCtx.fill();
+				bgBufferCtx.restore();
+
+				bgContext.drawImage(bgBufferCvs, 0, 0);
+
+				bgAnimId = requestAnimationFrame(loopBg);
+			}
+			loopBg();
+
+			const handleDarkModeChangeBg = () => {
+				bodyBg.dataset.mode = prefersDarkBg.matches ? "dark" : "light";
+				if (bodyBg.dataset.mode === "light") {
+					bodyBg.classList.add("body-light");
+					bodyBg.classList.remove("body-dark");
+					BACKGROUND_COLOR = "rgb(214, 214, 214)";
+				} else {
+					bodyBg.classList.remove("body-light");
+					bodyBg.classList.add("body-dark");
+					BACKGROUND_COLOR = "rgba(30, 41, 59)";
+				}
+			};
+
+			prefersDarkBg.addEventListener("change", handleDarkModeChangeBg);
+
+			const toggleBtnBg = document.querySelector("#switch");
+			bodyBg.dataset.mode = prefersDarkBg.matches ? "dark" : "light";
+			bodyBg.classList.add(prefersDarkBg.matches ? "body-dark" : "body-light");
+
+			function toggleDarkModeBg() {
+				if (bodyBg.dataset.mode === "light") {
+					bodyBg.classList.add("body-dark");
+					bodyBg.classList.remove("body-light");
+					BACKGROUND_COLOR = "rgba(30, 41, 59)";
+					bodyBg.dataset.mode = "dark";
+				} else {
+					bodyBg.classList.remove("body-dark");
+					bodyBg.classList.add("body-light");
+					BACKGROUND_COLOR = "rgb(214, 214, 214)";
+					bodyBg.dataset.mode = "light";
+				}
+			}
+
+			toggleBtnBg && toggleBtnBg.addEventListener("click", toggleDarkModeBg);
+
+			// expose cleanup
+			const _cleanupBg = function () {
+				window.removeEventListener("resize", resizeBg, false);
+				if (bgCanvas) {
+					bgCanvas.removeEventListener("mousemove", mouseMoveBg, false);
+					bgCanvas.removeEventListener("mousedown", mouseDownBg, false);
+					bgCanvas.removeEventListener("mouseup", mouseUpBg, false);
+					bgCanvas.removeEventListener("dblclick", doubleClickBg, false);
+				}
+				prefersDarkBg.removeEventListener("change", handleDarkModeChangeBg);
+				toggleBtnBg && toggleBtnBg.removeEventListener("click", toggleDarkModeBg);
+				if (bgAnimId) cancelAnimationFrame(bgAnimId);
+			};
+
+			// attach cleanup handler to window so we can call it from outer cleanup
+			if (!window.__bgCanvasCleanups) window.__bgCanvasCleanups = [];
+			window.__bgCanvasCleanups.push(_cleanupBg);
+		})();
+
 		/* ── FORM ───────────────────────────────────────────────── */
 		function handleForm(e) {
 			e.preventDefault();
 			const btn = e.target.querySelector(".btn-send");
 			if (!btn) return;
-			btn.textContent = "✓ Mensaje enviado";
-			btn.style.background = "linear-gradient(135deg,#4caf50,#2e7d32)";
-			setTimeout(() => {
-				btn.innerHTML = '<i class="fa-regular fa-paper-plane"></i> Enviar mensaje';
-				btn.style.background = "";
-				e.target.reset();
-			}, 3000);
+
+			const serviceID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+			const templateID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+
+			btn.disabled = true;
+			btn.textContent = "Enviando...";
+
+			if (!serviceID || !templateID) {
+				// Fallback: show UI but warn
+				btn.textContent = "✓ Mensaje enviado";
+				btn.style.background = "linear-gradient(135deg,#4caf50,#2e7d32)";
+				setTimeout(() => {
+					btn.innerHTML = '<i class="fa-regular fa-paper-plane"></i> Enviar mensaje';
+					btn.style.background = "";
+					btn.disabled = false;
+					e.target.reset();
+					alert("Formulario procesado localmente. Para enviar correos reales configura EmailJS (VITE_EMAILJS_*).");
+				}, 2000);
+				return;
+			}
+
+			// build template params explicitly and force recipient email
+			const formData = new FormData(e.target);
+			const now = new Date();
+			const time = `${now.getDate().toString().padStart(2, "0")}/${(now.getMonth() + 1).toString().padStart(2, "0")}/${now.getFullYear()}`;
+			const templateParams = {
+				// required shape requested by the user
+				title: formData.get("title") || "Nuevo mensaje",
+				name: formData.get("name") || formData.get("nombre") || "Usuario",
+				time: time,
+				message: formData.get("message") || formData.get("mensaje") || formData.get("message_text") || "",
+				email: formData.get("email") || formData.get("correo") || "",
+			};
+			console.log("*-/-*/-*/-*/-*/  ", templateParams);
+			// Use the EmailJS documented promise style
+			emailjs.send(serviceID, templateID, templateParams).then(
+				(response) => {
+					console.log("SUCCESS!", response.status, response.text);
+					btn.textContent = "✓ Mensaje enviado";
+					btn.style.background = "linear-gradient(135deg,#4caf50,#2e7d32)";
+					setTimeout(() => {
+						btn.innerHTML = '<i class="fa-regular fa-paper-plane"></i> Enviar mensaje';
+						btn.style.background = "";
+						btn.disabled = false;
+						e.target.reset();
+					}, 2000);
+				},
+				(error) => {
+					console.log("FAILED...", error);
+					btn.textContent = "Error";
+					btn.style.background = "linear-gradient(135deg,#d32f2f,#b71c1c)";
+					setTimeout(() => {
+						btn.innerHTML = '<i class="fa-regular fa-paper-plane"></i> Enviar mensaje';
+						btn.style.background = "";
+						btn.disabled = false;
+						alert("No se pudo enviar el correo. Revisa la configuración de EmailJS en .env y que la plantilla exista. Mira la consola para detalles.");
+					}, 2500);
+				},
+			);
 		}
 
 		const form = document.getElementById("contactForm");
