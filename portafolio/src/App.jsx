@@ -5,7 +5,7 @@ import userLogo_white from "./assets/user_logo_v2.png";
 function App() {
 	return (
 		<>
-			<canvas id="c" style={{position: 'fixed', top: 0, left: 0, zIndex: 1}}></canvas>
+			<canvas id="c" style={{ position: "fixed", top: 0, left: 0, zIndex: 1 }}></canvas>
 			<div class="cursor-dot" id="cursorDot"></div>
 			<div class="cursor-ring" id="cursorRing"></div>
 

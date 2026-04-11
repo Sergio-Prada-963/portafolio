@@ -517,10 +517,7 @@ export default function Interactive() {
 
 						if (g === this || g.destroyed) continue;
 
-						if (
-							(this.currentRadius >= g.radius || this.dragging) &&
-							this.distanceTo(g) < (this.currentRadius + g.radius) * 0.85
-						) {
+						if ((this.currentRadius >= g.radius || this.dragging) && this.distanceTo(g) < (this.currentRadius + g.radius) * 0.85) {
 							g.destroyed = true;
 							this.gravity += g.gravity;
 
@@ -627,8 +624,8 @@ export default function Interactive() {
 			document.body.removeChild(div);
 
 			function resizeBg() {
-				bgScreenWidth = (bgCanvas.width = window.innerWidth - scrollWidth);
-				bgScreenHeight = (bgCanvas.height = window.innerHeight);
+				bgScreenWidth = bgCanvas.width = window.innerWidth - scrollWidth;
+				bgScreenHeight = bgCanvas.height = window.innerHeight;
 				bgBufferCvs.width = bgScreenWidth;
 				bgBufferCvs.height = bgScreenHeight;
 				bgContext = bgCanvas.getContext("2d");
@@ -667,7 +664,7 @@ export default function Interactive() {
 					new GravityPoint(e.clientX, e.clientY, G_POINT_RADIUS, {
 						particles: bgParticles,
 						gravities: bgGravities,
-					})
+					}),
 				);
 			}
 
@@ -692,11 +689,7 @@ export default function Interactive() {
 			function addParticleBg(num) {
 				var i, p;
 				for (i = 0; i < num; i++) {
-					p = new Particle(
-						Math.floor(Math.random() * bgScreenWidth - PARTICLE_RADIUS * 2) + 1 + PARTICLE_RADIUS,
-						Math.floor(Math.random() * bgScreenHeight - PARTICLE_RADIUS * 2) + 1 + PARTICLE_RADIUS,
-						PARTICLE_RADIUS
-					);
+					p = new Particle(Math.floor(Math.random() * bgScreenWidth - PARTICLE_RADIUS * 2) + 1 + PARTICLE_RADIUS, Math.floor(Math.random() * bgScreenHeight - PARTICLE_RADIUS * 2) + 1 + PARTICLE_RADIUS, PARTICLE_RADIUS);
 
 					p.addSpeed(Vector.random());
 					bgParticles.push(p);
