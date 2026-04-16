@@ -89,6 +89,7 @@ export default function Interactive() {
 			{ name: "Vite", img: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vitejs/vitejs-original.svg", lvl: 80 },
 			{ name: "Odoo", img: "https://odoocdn.com/web/image/website/1/favicon?unique=8d8a558", lvl: 70 },
 			{ name: "LangChain", img: "https://cdn.prod.website-files.com/65b8cd72835ceeacd4449a53/69a17e4a429d54e956e2a763_favicon.png", lvl: 75 },
+			{ name: "PHP", img: "https://www.php.net/favicon.ico?v=2", lvl: 75 },
 		];
 
 		const grid = document.getElementById("techGrid");
